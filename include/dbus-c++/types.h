@@ -296,7 +296,8 @@ template<>
 inline DBus::MessageIter &operator << (DBus::MessageIter &iter, const std::vector<uint8_t>& val)
 {
 	DBus::MessageIter ait = iter.new_array("y");
-	ait.append_array('y', &val.front(), val.size());
+	if (!val.empty())
+		ait.append_array('y', &val.front(), val.size());
 	iter.close_container(ait);
 	return iter;
 }
