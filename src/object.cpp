@@ -192,9 +192,19 @@ void ObjectAdaptor::register_obj()
                 throw ErrorInvalidArgs(message.c_str());
         }
 
-	if (!dbus_connection_register_object_path(conn()._pvt->conn, path().c_str(), &_vtable, this))
+	DBusError error = DBUS_ERROR_INIT;
+	if (!dbus_connection_try_register_object_path(conn()._pvt->conn, path().c_str(), &_vtable, this, &error))
 	{
- 		throw ErrorNoMemory("unable to register object path");
+		if (dbus_error_has_name(&error, DBUS_ERROR_OBJECT_PATH_IN_USE))
+		{
+			dbus_error_free(&error);
+			throw ErrorObjectPathInUse("unable to register object path");
+		}
+		else
+		{
+			dbus_error_free(&error);
+			throw ErrorNoMemory("unable to register object path");
+		}
 	}
 
 	_adaptor_table[path()] = this;

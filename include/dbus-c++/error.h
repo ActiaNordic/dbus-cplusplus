@@ -279,6 +279,13 @@ struct DXXAPI ErrorSELinuxSecurityContextUnknown : public Error
 	{}
 };
 
+struct DXXAPI ErrorObjectPathInUse : public Error
+{
+	ErrorObjectPathInUse(const char *message)
+	: Error("org.freedesktop.DBus.Error.ObjectPathInUse", message)
+	{}
+};
+
 } /* namespace DBus */
 
 #endif//__DBUSXX_ERROR_H
