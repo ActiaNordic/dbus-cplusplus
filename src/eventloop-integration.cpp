@@ -88,14 +88,15 @@ void BusDispatcher::enter()
 void BusDispatcher::leave()
 {
 	_running = false;
-  
-	int ret = write(_fdunlock[1],"exit",strlen("exit"));
-	if (ret == -1) {
-          char buffer[128]; // buffer copied in Error constructor
-          throw Error("PipeError:errno", strerror_r(errno,
-                                                    buffer,
-                                                    sizeof(buffer)));
-        }
+	if (_fdunlock[1] >= 0) {
+		int ret = write(_fdunlock[1],"exit",strlen("exit"));
+		if (ret == -1) {
+			char buffer[128]; // buffer copied in Error constructor
+			throw Error("PipeError:errno", strerror_r(errno,
+								  buffer,
+								  sizeof(buffer)));
+		}
+	}
 	close(_fdunlock[1]);
 	close(_fdunlock[0]);
 }

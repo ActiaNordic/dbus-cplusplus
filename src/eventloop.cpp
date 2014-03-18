@@ -106,6 +106,8 @@ void DefaultMutex::unlock()
 
 DefaultMainLoop::DefaultMainLoop()
 {
+	  _fdunlock[0] = -1;
+	  _fdunlock[1] = -1;
 }
 
 DefaultMainLoop::~DefaultMainLoop()
@@ -145,7 +147,7 @@ void DefaultMainLoop::dispatch()
 
 	int nfd = _watches.size();
 
-	if(_fdunlock)
+	if (_fdunlock[0] >= 0 && _fdunlock[1] >= 0)
 	{
 		nfd=nfd+2;
 	}
@@ -166,7 +168,8 @@ void DefaultMainLoop::dispatch()
 		}
 	}
 
-	if(_fdunlock){
+	if (_fdunlock[0] >= 0 && _fdunlock[1] >= 0)
+	{
 		fds[nfd].fd = _fdunlock[0];
 		fds[nfd].events = POLLIN | POLLOUT | POLLPRI ;
 		fds[nfd].revents = 0;

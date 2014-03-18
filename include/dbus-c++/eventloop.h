@@ -152,7 +152,10 @@ public:
 
 	virtual void dispatch();
 
+protected:
+
 	int _fdunlock[2];
+
 private:
 
 	DefaultMutex _mutex_t;
