@@ -416,8 +416,30 @@ public:
 	 */
 	PendingCall *send_async(Message& msg, int timeout = -1);
 
+        /*!
+         *\brief Request a name from DBus.
+         *
+         * Request ownership of a name. The name and flags are passed
+         * on to the lower-layer.
+         *
+         * Unless you are doing something unusual, you should use
+         * acquire_name instead of this method.
+         *
+         * \param name The name to request ownership of.
+         * \param flags Flags to be passed to dbus_bus_request_name.
+         */
 	void request_name( const char* name, int flags = 0 );
-    
+
+        /*!
+         *\brief Acquire a name from DBus.
+         *
+         * Request ownership of a name. Return true if the name was
+         * acquired, and false otherwise.
+         *
+         * \return True if the name was acquired, and false otherwise.
+         */
+        bool acquire_name( const char* name );
+
 	unsigned long sender_unix_uid(const char *sender);
 
 	/*!
@@ -462,6 +484,7 @@ public:
 private:
 
 	DXXAPILOCAL void init();
+	DXXAPILOCAL int _request_name( const char* name, int flags );
 
 private:
 

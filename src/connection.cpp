@@ -388,17 +388,12 @@ PendingCall *Connection::send_async(Message &msg, int timeout)
 	return new PendingCall(new PendingCall::Private(pending));
 }
 
-void Connection::request_name(const char *name, int flags)
+int Connection::_request_name(const char *name, int flags)
 {
 	InternalError e;
 
 	debug_log("%s: registering bus name %s", unique_name(), name);
 
-        /*
-         * TODO:
-         * Think about giving back the 'ret' value. Some people on the list
-         * requested about this...
-         */
 	int ret = dbus_bus_request_name(_pvt->conn, name, flags, e);
 
 	if (ret == -1)
@@ -413,6 +408,75 @@ void Connection::request_name(const char *name, int flags)
 		_pvt->names.push_back(name);
 		std::string match = "destination='" + _pvt->names.back() + "'";
 		add_match(match.c_str());
+	}
+
+	return ret;
+}
+
+void Connection::request_name(const char *name, int flags)
+{
+	/*
+	 * TODO:
+	 * Think about giving back the 'ret' value. Some people on the list
+	 * requested about this...
+	 */
+	_request_name(name, flags);
+}
+
+bool Connection::acquire_name(const char *name)
+{
+	/*
+	 * Request the desired name, allowing the request to be queued.
+	 */
+	int ret = _request_name(name, 0);
+	switch (ret) {
+		case DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER:
+		case DBUS_REQUEST_NAME_REPLY_ALREADY_OWNER:
+			return true;
+		case DBUS_REQUEST_NAME_REPLY_IN_QUEUE:
+			break;
+		case DBUS_REQUEST_NAME_REPLY_EXISTS:
+		default:
+			// Unexpected, but try to keep going.
+			debug_log("%s: unexpected reply %d for RequestName",
+				  dbus_bus_get_unique_name(_pvt->conn), ret);
+			break;
+	}
+
+	/*
+	 * We didn't get the name. Perhaps the name owner terminated
+	 * abruptly, and dbus-daemon doesn't know that yet.  Ask
+	 * dbus-daemon to check if the name owner is still up.
+	 */
+	CallMessage ping_request(name, "/", "org.freedesktop.DBus.Peer", "Ping");
+	try {
+		send_blocking(ping_request, DBUS_TIMEOUT_USE_DEFAULT);
+	} catch (const DBus::Error &) {
+		/*
+		 * We don't care if the ping request times out or generates
+                 * some other error. We only care about its side-effect.
+		 */
+	}
+
+	/*
+	 * Now that we've nudged dbus-daemon, try requesting the name
+	 * one more time. Note that we may already be the owner at
+	 * this point, because our first attempt allowed queuing the
+	 * request.
+	 */
+	ret = _request_name(name, DBUS_NAME_FLAG_DO_NOT_QUEUE);
+	switch (ret) {
+		case DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER:
+		case DBUS_REQUEST_NAME_REPLY_ALREADY_OWNER:
+			return true;
+		case DBUS_REQUEST_NAME_REPLY_EXISTS:
+			return false;
+		case DBUS_REQUEST_NAME_REPLY_IN_QUEUE:
+		default:
+			// Log unexpected response.
+			debug_log("%s: unexpected reply %d for RequestName",
+				  dbus_bus_get_unique_name(_pvt->conn), ret);
+			return false;
 	}
 }
 
