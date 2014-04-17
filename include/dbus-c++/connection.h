@@ -428,7 +428,8 @@ public:
          * \param name The name to request ownership of.
          * \param flags Flags to be passed to dbus_bus_request_name.
          */
-	void request_name( const char* name, int flags = 0 );
+	void request_name( const char* name, int flags = 0 )
+	    __attribute__((__deprecated__));
 
         /*!
          *\brief Acquire a name from DBus.
@@ -438,7 +439,8 @@ public:
          *
          * \return True if the name was acquired, and false otherwise.
          */
-        bool acquire_name( const char* name );
+	bool acquire_name( const char* name )
+	    __attribute__((__warn_unused_result__));
 
 	unsigned long sender_unix_uid(const char *sender);
 
