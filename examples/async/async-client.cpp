@@ -64,26 +64,26 @@ void *do_method_calls(void *arg)
 {
 	AsyncClient *client = reinterpret_cast<AsyncClient *>(arg);
 
-        client->Hello("Obi-Wan", NULL);
+        client->HelloAsync("Obi-Wan", NULL);
 	cout << "Called Hello method" << endl;
 
         int32_t nums[] = {3, 1, -5, 7, 23};
 
         std::vector<int32_t> numvec(&nums[0], &nums[5]);
 
-        client->Sum(numvec, NULL);
+        client->SumAsync(numvec, NULL);
 	cout << "Called Sum method" << endl;
 
 	string out1, out2;
 	// TODO(ers) using a timeout results in a deadlock if the timeout
 	// expires
-	client->SplitString("first part,second part", (void *)98/*, 1000*/);
+	client->SplitStringAsync("first part,second part", (void *)98/*, 1000*/);
 	cout << "Called SplitString method" << endl;
 
-	client->SplitString("", NULL);
+	client->SplitStringAsync("", NULL);
 	cout << "Called SplitString method with empty string" << endl;
 
-	client->Timed_Wait(4, NULL);
+	client->Timed_WaitAsync(4, NULL);
 	cout << "Called Timed_Wait" << endl;
 
 	cout << "done " << endl;

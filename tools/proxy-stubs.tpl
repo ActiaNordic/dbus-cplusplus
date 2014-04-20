@@ -116,7 +116,7 @@ public:
      * on the remote objects.
      */
 {{#FOR_EACH_ASYNC_METHOD}}
-    void {{METHOD_NAME}}({{#METHOD_ARG_LIST}}{{METHOD_ARG_DECL}}{{#METHOD_ARG_LIST_separator}}, {{/METHOD_ARG_LIST_separator}}{{/METHOD_ARG_LIST}})
+    void {{METHOD_NAME}}Async({{#METHOD_ARG_LIST}}{{METHOD_ARG_DECL}}{{#METHOD_ARG_LIST_separator}}, {{/METHOD_ARG_LIST_separator}}{{/METHOD_ARG_LIST}})
     {
         ::DBus::CallMessage __call;
 
