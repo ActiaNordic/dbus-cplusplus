@@ -87,7 +87,7 @@ void generate_methods(TemplateDictionary *dict, Xml::Nodes &methods)
 			string arg_decl = "const " + arg_type + "& ";
 			string arg_name = arg.get("name");
 			arg_name = arg_name.empty() ?
-					("argin" + i) : legalize(arg_name);
+					("argin" + to_string(i)) : legalize(arg_name);
 			arg_decl += arg_name;
 			for (m = 0; m < 2; m++)
 			{
@@ -161,7 +161,7 @@ void generate_methods(TemplateDictionary *dict, Xml::Nodes &methods)
 				Xml::Node &arg = **ao;
 				string arg_name = arg.get("name");
 				arg_name = arg_name.empty() ?
-						("__argout" + i) : legalize(arg_name);
+						("__argout" + to_string(i)) : legalize(arg_name);
 				string arg_sig = signature_to_type(arg.get("type"));
 				string arg_decl = arg_sig + "& " + arg_name;
 				for (m = 0; m < 2; m++)
@@ -327,7 +327,7 @@ void generate_stubs(Xml::Document &doc, const char *filename,
 				string const_arg_decl = "const " + arg_decl + "&";
 				string arg_name = arg.get("name");
 				arg_name = arg_name.empty() ?
-						("argin" + i) : legalize(arg_name);
+						("argin" + to_string(i)) : legalize(arg_name);
 				arg_decl += arg_name;
 				const_arg_decl += arg_name;
 				arg_dict->SetValue("SIGNAL_ARG_NAME", arg_name);

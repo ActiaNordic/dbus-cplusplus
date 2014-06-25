@@ -35,5 +35,6 @@ bool is_primitive_type(const std::string &signature);
 void _parse_signature(const std::string &signature, std::string &type, unsigned int &i);
 void underscorize(std::string &str);
 std::string legalize(const std::string &str);
+std::string to_string(unsigned int v);
 
 #endif//__DBUSXX_TOOLS_GENERATOR_UTILS_H

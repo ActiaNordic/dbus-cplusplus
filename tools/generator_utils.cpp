@@ -22,6 +22,7 @@
  */
 
 #include <iostream>
+#include <cstdio>
 #include <cstdlib>
 
 #include <dbus/dbus.h>		// for DBUS_TYPE_*
@@ -121,7 +122,7 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 				type += " >";
 				continue;
 			}
-			case '(':	
+			case '(':
 			{
 				type += "::DBus::Struct< ";
 				++i;
@@ -134,7 +135,7 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 				continue;
 			}
 			case ')':
-			case '}':	
+			case '}':
 			{
 				return;
 			}
@@ -193,4 +194,11 @@ bool is_primitive_type(const string &signature) {
 		default:
 			return false;
 	}
+}
+
+// Remove this function when switching to C++11.
+string to_string(unsigned int v) {
+	char buffer[16];
+	snprintf(buffer, sizeof(buffer), "%u", v);
+	return buffer;  // Converted to string here.
 }
