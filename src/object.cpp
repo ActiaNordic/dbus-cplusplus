@@ -133,7 +133,8 @@ ObjectPathList ObjectAdaptor::child_nodes_from_prefix(const std::string &prefix)
 
 	while (ati != _adaptor_table.end())
 	{
-	  if (!strncmp(ati->second->path().c_str(), prefix.c_str(), plen))
+	  if (ati->second->path() != "/" &&  // Root node is never a child.
+	      !strncmp(ati->second->path().c_str(), prefix.c_str(), plen))
 		{
 				std::string p = ati->second->path().substr(plen);
 				p = p.substr(0,p.find('/'));

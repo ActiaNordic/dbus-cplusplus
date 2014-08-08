@@ -114,7 +114,8 @@ Message IntrospectableAdaptor::Introspect(const CallMessage &call)
 		}
 	}
 
-	const ObjectPathList nodes = ObjectAdaptor::child_nodes_from_prefix(path + '/');
+	const std::string prefix(path == "/" ? path : path + '/');
+	const ObjectPathList nodes = ObjectAdaptor::child_nodes_from_prefix(prefix);
 	ObjectPathList::const_iterator oni;
 
 	for (oni = nodes.begin(); oni != nodes.end(); ++oni) 
