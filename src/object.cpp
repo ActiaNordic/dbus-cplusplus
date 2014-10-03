@@ -150,21 +150,21 @@ ObjectPathList ObjectAdaptor::child_nodes_from_prefix(const std::string &prefix)
 }
 
 ObjectAdaptor::ObjectAdaptor(Connection &conn, const Path &path)
-: Object(conn, path, conn.unique_name()), _eflag(USE_EXCEPTIONS)
+: Object(conn, path, conn.unique_name()), _aflag(SYNCHRONOUS)
 {
 	register_obj();
 }
 
 ObjectAdaptor::ObjectAdaptor(Connection &conn, const Path &path, registration_time rtime)
-: Object(conn, path, conn.unique_name()), _eflag(USE_EXCEPTIONS)
+: Object(conn, path, conn.unique_name()), _aflag(SYNCHRONOUS)
 {
 	if (rtime == REGISTER_NOW)
 		register_obj();
 }
 
 ObjectAdaptor::ObjectAdaptor(Connection &conn, const Path &path, registration_time rtime,
-				exceptions_flag eflag)
-: Object(conn, path, conn.unique_name()), _eflag(eflag)
+				async_flag aflag)
+: Object(conn, path, conn.unique_name()), _aflag(aflag)
 {
 	if (rtime == REGISTER_NOW)
 		register_obj();
@@ -254,6 +254,19 @@ struct ReturnLaterError
 	const Tag *tag;
 };
 
+void ObjectAdaptor::dispatch_message_async(const CallMessage &cmsg,
+					    InterfaceAdaptor *ii)
+{
+	Message ret = ii->dispatch_method(cmsg);
+	Tag *tag = ret.tag();
+	if (tag) {
+		_continuations[tag] =
+		new Continuation(conn(), cmsg, tag);
+	} else {
+		conn().send(ret);
+	}
+}
+
 bool ObjectAdaptor::handle_message(const Message &msg)
 {
 	switch (msg.type())
@@ -269,14 +282,17 @@ bool ObjectAdaptor::handle_message(const Message &msg)
 			InterfaceAdaptor *ii = find_interface(interface);
 			if (ii)
 			{
-				if (_eflag == AVOID_EXCEPTIONS) {
-					Message ret = ii->dispatch_method(cmsg);
-					Tag *tag = ret.tag();
-					if (tag) {
-						_continuations[tag] =
-						    new Continuation(conn(), cmsg, tag);
+				if (_aflag != SYNCHRONOUS) {
+					if (_aflag == ASYNCHRONOUS) {
+						try {
+							dispatch_message_async(cmsg, ii);
+						}
+						catch (Error &e) {
+							ErrorMessage em(cmsg, e.name(), e.message());
+							conn().send(em);
+						}
 					} else {
-						conn().send(ret);
+						dispatch_message_async(cmsg, ii);
 					}
 					return true;
 				}

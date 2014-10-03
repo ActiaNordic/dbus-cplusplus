@@ -122,15 +122,18 @@ public:
 		REGISTER_LATER,
 	};
 
-	enum exceptions_flag {
-		USE_EXCEPTIONS,
+	enum async_flag {
+		SYNCHRONOUS,
+		ASYNCHRONOUS,
+		ASYNCHRONOUS_AVOID_EXCEPTIONS,
+		// Deprecated; use ASYNCHRONOUS_AVOID_EXCEPTIONS
 		AVOID_EXCEPTIONS
 	};
 
 	ObjectAdaptor(Connection &conn, const Path &path);
 	ObjectAdaptor(Connection &conn, const Path &path, registration_time rtime);
 	ObjectAdaptor(Connection &conn, const Path &path, registration_time rtime,
-		      exceptions_flag eflag);
+		      async_flag aflag);
 
 	~ObjectAdaptor();
 
@@ -174,13 +177,14 @@ protected:
 private:
 
 	void _emit_signal(SignalMessage &);
-
+	void dispatch_message_async(const CallMessage &cmsg,
+				    InterfaceAdaptor *ii);
 	bool handle_message(const Message &);
 
 	typedef std::map<const Tag *, Continuation *> ContinuationMap;
 	ContinuationMap _continuations;
 
-	exceptions_flag _eflag;
+	async_flag _aflag;
 
 friend struct Private;
 };
