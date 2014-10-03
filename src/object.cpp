@@ -504,7 +504,12 @@ bool ObjectProxy::handle_message(const Message &msg)
 			InterfaceProxy *ii = find_interface(interface);
 			if (ii)
 			{
-				return ii->dispatch_signal(smsg);
+				try {
+					return ii->dispatch_signal(smsg);
+				}
+				catch (Error &) {
+					return false;
+				}
 			}
 			else
 			{
