@@ -279,6 +279,13 @@ bool ObjectAdaptor::handle_message(const Message &msg)
 
 			debug_log(" invoking method %s.%s", interface, member);
 
+			if (interface == NULL)
+			{
+				ErrorMessage em(cmsg, DBUS_ERROR_UNKNOWN_INTERFACE, "(null) interface");
+				conn().send(em);
+				return true;
+			}
+
 			InterfaceAdaptor *ii = find_interface(interface);
 			if (ii)
 			{
@@ -500,6 +507,11 @@ bool ObjectProxy::handle_message(const Message &msg)
 
 			debug_log("filtered signal %s(in %s) from %s to object %s",
 				member, interface, msg.sender(), objpath);
+
+			if (interface == NULL)
+			{
+				return false;
+			}
 
 			InterfaceProxy *ii = find_interface(interface);
 			if (ii)
