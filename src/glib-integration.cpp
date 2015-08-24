@@ -194,6 +194,7 @@ void Glib::BusWatch::_disable()
 	GPollFD *poll = &(((BusSource *)_source)->poll);
 	g_source_remove_poll(_source, poll);
 	g_source_destroy(_source);
+	g_source_unref(_source);
 	_source = NULL;
 }
 
