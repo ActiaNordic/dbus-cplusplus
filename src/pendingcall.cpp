@@ -140,5 +140,5 @@ Message PendingCall::steal_reply()
 			throw ErrorNoReply("Call not complete");
 	}
 
-	return Message(new Message::Private(dmsg));
+	return Message(new Message::Private(dmsg), false);
 }
