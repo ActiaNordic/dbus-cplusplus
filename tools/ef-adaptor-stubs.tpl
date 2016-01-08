@@ -1,8 +1,8 @@
 /*
  *  {{AUTO_GENERATED_WARNING}}
  */
-#ifndef __dbusxx_ef__{{FILE_STRING}}__ADAPTOR_MARSHALL_H
-#define __dbusxx_ef__{{FILE_STRING}}__ADAPTOR_MARSHALL_H
+#ifndef __dbusxx_ef__{{FILE_STRING}}__ASYNC_ADAPTOR_MARSHALL_H
+#define __dbusxx_ef__{{FILE_STRING}}__ASYNC_ADAPTOR_MARSHALL_H
 
 #include <dbus-c++/dbus.h>
 #include <cassert>{{BI_NEWLINE}}
@@ -12,19 +12,19 @@
 namespace {{NAMESPACE_NAME}} {
 {{/FOR_EACH_NAMESPACE}}
 
-{{BI_NEWLINE}}class {{CLASS_NAME}}_adaptor
+{{BI_NEWLINE}}class {{CLASS_NAME}}_async_adaptor
   : public ::DBus::InterfaceAdaptor
 {
 public:
 
-    {{CLASS_NAME}}_adaptor()
+    {{CLASS_NAME}}_async_adaptor()
     : ::DBus::InterfaceAdaptor("{{INTERFACE_NAME}}")
     {
 {{#FOR_EACH_PROPERTY}}
         bind_property({{PROP_NAME}}, "{{PROP_SIG}}", {{PROP_READABLE}}, {{PROP_WRITEABLE}});
 {{/FOR_EACH_PROPERTY}}
 {{#FOR_EACH_METHOD}}
-        register_method({{CLASS_NAME}}_adaptor, {{METHOD_NAME}}, _{{METHOD_NAME}}_stub);
+        register_method({{CLASS_NAME}}_async_adaptor, {{METHOD_NAME}}, _{{METHOD_NAME}}_stub);
 {{/FOR_EACH_METHOD}}
     }
 
@@ -48,35 +48,35 @@ public:
             { 0, 0, 0 }
         };
 {{/FOR_EACH_SIGNAL}}
-        static const ::DBus::IntrospectedMethod {{CLASS_NAME}}_adaptor_methods[] =
+        static const ::DBus::IntrospectedMethod {{CLASS_NAME}}_async_adaptor_methods[] =
         {
 {{#FOR_EACH_METHOD}}
             { "{{METHOD_NAME}}", {{METHOD_NAME}}_args },
 {{/FOR_EACH_METHOD}}
             { 0, 0 }
         };
-        static const ::DBus::IntrospectedMethod {{CLASS_NAME}}_adaptor_signals[] =
+        static const ::DBus::IntrospectedMethod {{CLASS_NAME}}_async_adaptor_signals[] =
         {
 {{#FOR_EACH_SIGNAL}}
             { "{{SIGNAL_NAME}}", {{SIGNAL_NAME}}_args },
 {{/FOR_EACH_SIGNAL}}
             { 0, 0 }
         };
-        static const ::DBus::IntrospectedProperty {{CLASS_NAME}}_adaptor_properties[] =
+        static const ::DBus::IntrospectedProperty {{CLASS_NAME}}_async_adaptor_properties[] =
         {
 {{#FOR_EACH_PROPERTY}}
             { "{{PROP_NAME}}", "{{PROP_SIG}}", {{PROP_READABLE}}, {{PROP_WRITEABLE}} },
 {{/FOR_EACH_PROPERTY}}
             { 0, 0, 0, 0 }
         };
-        static const ::DBus::IntrospectedInterface {{CLASS_NAME}}_adaptor_interface =
+        static const ::DBus::IntrospectedInterface {{CLASS_NAME}}_async_adaptor_interface =
         {
             "{{INTERFACE_NAME}}",
-            {{CLASS_NAME}}_adaptor_methods,
-            {{CLASS_NAME}}_adaptor_signals,
-            {{CLASS_NAME}}_adaptor_properties
+            {{CLASS_NAME}}_async_adaptor_methods,
+            {{CLASS_NAME}}_async_adaptor_signals,
+            {{CLASS_NAME}}_async_adaptor_properties
         };
-        return &{{CLASS_NAME}}_adaptor_interface;
+        return &{{CLASS_NAME}}_async_adaptor_interface;
     }
 
     /* Properties exposed by this interface.
@@ -183,4 +183,4 @@ private:
 {{#FOR_EACH_NAMESPACE}}}{{/FOR_EACH_NAMESPACE}}
 {{/FOR_EACH_INTERFACE}}
 
-#endif  // __dbusxx_ef__{{FILE_STRING}}__ADAPTOR_MARSHALL_H
+#endif  // __dbusxx_ef__{{FILE_STRING}}__ASYNC_ADAPTOR_MARSHALL_H
