@@ -75,6 +75,7 @@ void Glib::BusTimeout::_disable()
 	if (_source)
 	{
 		g_source_destroy(_source);
+		g_source_unref(_source);
 		_source = NULL;
 	}
 }
