@@ -128,7 +128,7 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 				++i;
 				_parse_signature(signature, type, i);
 				type += " >";
-				if (signature[i+1])
+				if (i+1 < signature.length() && signature[i+1] != ')' && signature[i+1] != '}')
 				{
 					type += ", ";
 				}
@@ -149,7 +149,7 @@ void _parse_signature(const string &signature, string &type, unsigned int &i)
 				}
 				type += atom;
 
-				if (signature[i+1] != ')' && signature[i+1] != '}' && i+1 < signature.length())
+				if (i+1 < signature.length() && signature[i+1] != ')' && signature[i+1] != '}')
 				{
 					type += ", ";
 				}
