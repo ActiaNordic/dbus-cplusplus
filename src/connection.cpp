@@ -77,6 +77,7 @@ Connection::Private::~Private()
 		dbus_connection_close(conn);
 	}
 	dbus_connection_unref(conn);
+	dbus_connection_unref(conn);	//todo: the library has to own another reference
 }
 
 void Connection::Private::init()
