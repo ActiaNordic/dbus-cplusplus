@@ -63,7 +63,7 @@ Message PropertiesAdaptor::Get(const CallMessage &call)
 	if (!value)
 		throw ErrorFailed("requested property not found");
 
-        if (value->signature().empty())
+	if (value->signature().empty())
 		throw ErrorFailed("requested property has not been initialized");
 
 	on_get_property(*interface, property_name, *value);
@@ -115,8 +115,14 @@ Message PropertiesAdaptor::GetAll(const CallMessage &call)
 	if (!interface)
 		throw ErrorFailed("requested interface not found");
 
-        PropertyDict *properties;
-        properties = interface->get_all_properties();
+	PropertyDict *properties;
+	properties = interface->get_all_properties();
+
+	PropertyDict::iterator pdi;
+	for (pdi = properties->begin(); pdi != properties->end(); ++pdi)
+	{
+		on_get_property(*interface, pdi->first, pdi->second);
+	}
 
 	ReturnMessage reply(call);
 
