@@ -4,7 +4,7 @@ if CROSS_COMPILING
 dbusxx_xml2cpp = dbusxx-xml2cpp
 else
 dbusxx_xml2cpp = $(top_builddir)/tools/dbusxx-xml2cpp
-DBUSXX_FLAGS = --templatedir=$(top_builddir)/tools
+DBUSXX_FLAGS = --templatedir=$(top_srcdir)/tools
 endif
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_builddir)/include $(glib_CFLAGS)
