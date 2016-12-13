@@ -67,7 +67,7 @@ if test -n "$vtest"; then
 	CXXFLAGS="$CXXFLAGS -fvisibility=hidden"
 else
 	AC_MSG_RESULT(no)
-fi 
+fi
 
 
 # Check for dependencies
@@ -121,20 +121,14 @@ else
 AM_CONDITIONAL(ENABLE_ECORE, test 0 = 1)
 fi
 
-AC_CHECK_LIB([expat], XML_ParserCreate_MM,
-   	[AC_CHECK_HEADERS(expat.h, have_expat=true, have_expat=false)],
-	have_expat=false)
-
-if ! $have_expat; then
+EXPAT_VERSION=2.1.0
+PKG_CHECK_MODULES([expat], [expat >= $EXPAT_VERSION], ,
 	AC_MSG_ERROR([You need the eXpat xml parser]
-		[http://expat.sourceforge.net/])
-fi
+	[http://expat.sourceforge.net/])
+)
 
-xml_CFLAGS=
-xml_LIBS=-lexpat
-
-AC_SUBST(xml_CFLAGS)
-AC_SUBST(xml_LIBS)
+AC_SUBST(expat_CFLAGS)
+AC_SUBST(expat_LIBS)
 
 ACX_PTHREAD
 if test x"$acx_pthread_ok" = xyes; then
