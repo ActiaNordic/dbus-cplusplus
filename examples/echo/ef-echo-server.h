@@ -5,7 +5,7 @@
 #include "ef-echo-server-glue.h"
 
 class EchoServer
-: public org::freedesktop::DBus::EchoDemo_adaptor,
+: public org::freedesktop::DBus::EchoDemo_async_adaptor,
   public DBus::IntrospectableAdaptor,
   public DBus::ObjectAdaptor
 {
